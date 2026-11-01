@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Garajim.App/Garajim.App.csproj" />
+    <Project Path="src/Garajim.Core/Garajim.Core.csproj" />
+    <Project Path="src/Garajim.Data/Garajim.Data.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Garajim.Tests/Garajim.Tests.csproj" />
+  </Folder>
+</Solution>
