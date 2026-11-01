@@ -1,0 +1,14 @@
+<UserControl x:Class="Garajim.App.Controls.StatCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="Root">
+    <Border Background="{StaticResource CardBrush}"
+            BorderBrush="{StaticResource CardBorderBrush}"
+            BorderThickness="1" CornerRadius="12" Padding="20" Margin="0,0,16,16">
+        <StackPanel>
+            <TextBlock Text="{Binding Title, ElementName=Root}" Style="{StaticResource CaptionText}" />
+            <TextBlock Text="{Binding Value, ElementName=Root}" Style="{StaticResource StatValueText}" Margin="0,8,0,4" />
+            <TextBlock Text="{Binding Subtitle, ElementName=Root}" Style="{StaticResource CaptionText}" />
+        </StackPanel>
+    </Border>
+</UserControl>

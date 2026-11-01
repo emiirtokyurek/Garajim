@@ -1,0 +1,58 @@
+<Window x:Class="Garajim.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:Garajim.App.ViewModels"
+        xmlns:views="clr-namespace:Garajim.App.Views"
+        Title="Garajım" Width="1280" Height="760" MinWidth="1000" MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource AppBgBrush}"
+        Foreground="{StaticResource TextPrimaryBrush}"
+        FontFamily="Segoe UI">
+
+    <Window.Resources>
+        <!-- Hangi ViewModel hangi ekranla gösterilecek -->
+        <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
+            <views:DashboardView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:PlaceholderViewModel}">
+            <views:PlaceholderView />
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="240" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Sol menü -->
+        <Border Background="{StaticResource SidebarBrush}"
+                BorderBrush="{StaticResource CardBorderBrush}" BorderThickness="0,0,1,0">
+            <StackPanel Margin="16">
+                <StackPanel Margin="8,8,8,28">
+                    <TextBlock Text="Garajım" FontSize="22" FontWeight="SemiBold"
+                               Foreground="{StaticResource TextPrimaryBrush}" />
+                    <TextBlock Text="Araç masraf takibi" Style="{StaticResource CaptionText}" Margin="0,2,0,0" />
+                </StackPanel>
+
+                <RadioButton Content="Ana Sayfa" GroupName="Nav" IsChecked="True" Style="{StaticResource NavButton}"
+                             Command="{Binding NavigateCommand}" CommandParameter="Dashboard" />
+                <RadioButton Content="Araçlar" GroupName="Nav" Style="{StaticResource NavButton}"
+                             Command="{Binding NavigateCommand}" CommandParameter="Vehicles" />
+                <RadioButton Content="Yakıt" GroupName="Nav" Style="{StaticResource NavButton}"
+                             Command="{Binding NavigateCommand}" CommandParameter="Fuel" />
+                <RadioButton Content="Bakım" GroupName="Nav" Style="{StaticResource NavButton}"
+                             Command="{Binding NavigateCommand}" CommandParameter="Maintenance" />
+                <RadioButton Content="Giderler" GroupName="Nav" Style="{StaticResource NavButton}"
+                             Command="{Binding NavigateCommand}" CommandParameter="Expenses" />
+                <RadioButton Content="Raporlar" GroupName="Nav" Style="{StaticResource NavButton}"
+                             Command="{Binding NavigateCommand}" CommandParameter="Reports" />
+                <RadioButton Content="Hatırlatmalar" GroupName="Nav" Style="{StaticResource NavButton}"
+                             Command="{Binding NavigateCommand}" CommandParameter="Reminders" />
+            </StackPanel>
+        </Border>
+
+        <!-- İçerik alanı: seçilen ekran burada gösterilir -->
+        <ContentControl Grid.Column="1" Margin="32" Content="{Binding CurrentViewModel}" />
+    </Grid>
+</Window>
