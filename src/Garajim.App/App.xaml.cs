@@ -1,6 +1,12 @@
+using System.Globalization;
 using System.Windows;
+using System.Windows.Markup;
+using Garajim.App.Services;
 using Garajim.App.ViewModels;
+using Garajim.Core.Abstractions;
+using Garajim.Core.Services;
 using Garajim.Data;
+using Garajim.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,10 +20,25 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
+        // Sayı, para ve tarih biçimleri Türkçe olsun (ondalık virgül, binlik nokta).
+        var culture = new CultureInfo("tr-TR");
+        CultureInfo.DefaultThreadCurrentCulture = culture;
+        CultureInfo.DefaultThreadCurrentUICulture = culture;
+        Thread.CurrentThread.CurrentCulture = culture;
+        FrameworkElement.LanguageProperty.OverrideMetadata(
+            typeof(FrameworkElement),
+            new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(culture.IetfLanguageTag)));
+
         var services = new ServiceCollection();
         services.AddDbContextFactory<GarajimDbContext>(options =>
             options.UseSqlite($"Data Source={DatabasePaths.DefaultFilePath}"));
+
+        services.AddSingleton<IVehicleRepository, VehicleRepository>();
+        services.AddSingleton<VehicleService>();
+        services.AddSingleton<VehicleSelection>();
+
         services.AddSingleton<DashboardViewModel>();
+        services.AddSingleton<VehiclesViewModel>();
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<MainWindow>();
         _services = services.BuildServiceProvider();
@@ -37,6 +58,9 @@ public partial class App : Application
         }
 
         _services.GetRequiredService<MainWindow>().Show();
+
+        // Açılışta ana sayfanın araç listesini yükle.
+        _ = _services.GetRequiredService<DashboardViewModel>().LoadAsync();
     }
 
     protected override void OnExit(ExitEventArgs e)

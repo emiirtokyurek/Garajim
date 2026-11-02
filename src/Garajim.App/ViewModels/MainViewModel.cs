@@ -6,30 +6,37 @@ namespace Garajim.App.ViewModels;
 public partial class MainViewModel : ObservableObject
 {
     private readonly DashboardViewModel _dashboard;
+    private readonly VehiclesViewModel _vehicles;
 
     [ObservableProperty]
     private object? _currentViewModel;
 
-    public MainViewModel(DashboardViewModel dashboard)
+    public MainViewModel(DashboardViewModel dashboard, VehiclesViewModel vehicles)
     {
         _dashboard = dashboard;
+        _vehicles = vehicles;
         CurrentViewModel = dashboard;
     }
 
     [RelayCommand]
-    private void Navigate(string? page)
+    private async Task NavigateAsync(string? page)
     {
-        CurrentViewModel = page switch
+        switch (page)
         {
-            "Dashboard" => _dashboard,
-            "Vehicles" => Soon("Araçlar"),
-            "Fuel" => Soon("Yakıt"),
-            "Maintenance" => Soon("Bakım"),
-            "Expenses" => Soon("Giderler"),
-            "Reports" => Soon("Raporlar"),
-            "Reminders" => Soon("Hatırlatmalar"),
-            _ => _dashboard
-        };
+            case "Vehicles":
+                CurrentViewModel = _vehicles;
+                await _vehicles.LoadAsync();
+                break;
+            case "Fuel": CurrentViewModel = Soon("Yakıt"); break;
+            case "Maintenance": CurrentViewModel = Soon("Bakım"); break;
+            case "Expenses": CurrentViewModel = Soon("Giderler"); break;
+            case "Reports": CurrentViewModel = Soon("Raporlar"); break;
+            case "Reminders": CurrentViewModel = Soon("Hatırlatmalar"); break;
+            default:
+                CurrentViewModel = _dashboard;
+                await _dashboard.LoadAsync(); // araçlar sayfasında değişiklik olduysa yenilenir
+                break;
+        }
     }
 
     private static PlaceholderViewModel Soon(string title)

@@ -42,4 +42,32 @@ public class FuelRecordValidatorTests
 
         Assert.False(FuelRecordValidator.Validate(record).IsValid);
     }
+
+    [Fact]
+    public void Litre_carpi_fiyat_toplamla_uyusmuyorsa_hatalidir()
+    {
+        var record = Valid();
+        record.TotalCost = 1700; // 35 x 40 = 1400
+
+        Assert.False(FuelRecordValidator.Validate(record).IsValid);
+    }
+
+    [Fact]
+    public void Kucuk_yuvarlama_farki_kabul_edilir()
+    {
+        var record = Valid();
+        record.TotalCost = 1400.40m;
+
+        Assert.True(FuelRecordValidator.Validate(record).IsValid);
+    }
+
+    [Fact]
+    public void Asiri_yuksek_litre_hatalidir()
+    {
+        var record = Valid();
+        record.Liters = 500;
+        record.TotalCost = 20000;
+
+        Assert.False(FuelRecordValidator.Validate(record).IsValid);
+    }
 }
